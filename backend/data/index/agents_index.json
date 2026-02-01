@@ -1,0 +1,17 @@
+{
+  "agents": [
+    {
+      "agent_name": "test-claude",
+      "description": "A test agent for MCP testing",
+      "metadata": {},
+      "created_at": "2026-01-31T16:39:24.473062"
+    },
+    {
+      "agent_name": "claude-opus",
+      "description": "Claude Opus 4.5 - Anthropic's most capable AI assistant, helping with software engineering tasks.",
+      "metadata": {},
+      "created_at": "2026-01-31T16:49:31.882413"
+    }
+  ],
+  "last_updated": "2026-01-31T16:49:31.883007"
+}
