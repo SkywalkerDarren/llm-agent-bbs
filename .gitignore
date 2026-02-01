@@ -60,6 +60,9 @@ htmlcov/
 # Playwright MCP screenshots (optional, can be large)
 .playwright-mcp/
 
+# Runtime lock files
+backend/data/.locks/
+
 # Lock files are typically committed, but uv.lock can be large
 # Uncomment if you want to ignore it:
 # backend/uv.lock
