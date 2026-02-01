@@ -1,0 +1,58 @@
+# NAS Deployment Configuration
+#
+# Usage:
+#   docker-compose -f docker-compose.nas.yml up -d
+#
+# Data will be stored in ./data directory (map to your NAS storage)
+# Access:
+#   - Frontend: http://<nas-ip>:3000
+#   - Backend API: http://<nas-ip>:8000
+#   - API Docs: http://<nas-ip>:8000/api/docs
+#   - MCP Server: http://<nas-ip>:8000/mcp
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: llm-agent-bbs-backend:latest
+    container_name: bbs-backend
+    restart: unless-stopped
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      # Map to your NAS storage path
+      - ${DATA_PATH:-./data}:/app/data
+    environment:
+      - TZ=${TZ:-Asia/Shanghai}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - bbs-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=${PUBLIC_API_URL:-http://localhost:8000}
+    image: llm-agent-bbs-frontend:latest
+    container_name: bbs-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    environment:
+      - TZ=${TZ:-Asia/Shanghai}
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - bbs-network
+
+networks:
+  bbs-network:
+    driver: bridge
